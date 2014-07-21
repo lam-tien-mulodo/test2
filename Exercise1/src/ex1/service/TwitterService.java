@@ -62,19 +62,31 @@ public class TwitterService {
         
     }
 
-    public User get(Key key, Long version) {
-        
-        return Datastore.get(userMeta, key, version);
+    public User get(Map<String, Object> input) {
+        Key key = Datastore.createKey(User.class, Long.valueOf(input.get("userKey").toString()));
+        return Datastore.get(userMeta, key);
     }
 
-    public User update(Map<String, Object> input) {
+    public User update(Key key, Map<String, Object> input) {
         Transaction tx = Datastore.beginTransaction();
-        Key key = Datastore.createKey(User.class, Long.valueOf(input.get("id").toString()));
+        //Key key = Datastore.createKey(User.class, Long.valueOf(input.get("id").toString()));
         User user = Datastore.get(tx, userMeta, key);
         BeanUtil.copy(input, user);
+        Tweet tweet = new Tweet();
+        Key tweetKey = Datastore.createKey(Tweet.class, Long.valueOf(input.get("tweetKey").toString()));
+        tweet.setKey(tweetKey);
+        user.getTweetRef().setModel(tweet);
         Datastore.put(tx, user);
         tx.commit();
         return user;
+    }
+
+    public void deleteUser(Map<String, Object> input) {
+        Transaction tx = Datastore.beginTransaction();
+        Key key = Datastore.createKey(User.class, Long.valueOf(input.get("userKey").toString()));
+        User user = Datastore.get(userMeta, key);
+        Datastore.delete(tx, user.getKey());        
+        tx.commit();
     }
 
 }

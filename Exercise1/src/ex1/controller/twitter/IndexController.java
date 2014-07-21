@@ -36,7 +36,7 @@ public class IndexController extends Controller {
         List<User> userList = service.getAllUser();
         response.setContentType("text/html");
         response.getWriter().println("<?xml version='1.0' encoding='utf-8'?>");
-        response.getWriter().println ("<rows>");
+        response.getWriter().println ("<rows xmlns:xlink='http://www.w3.org/1999/xlink'>");
         int page = 1;
         int total_pages = 1;
         int count = 1;
@@ -52,7 +52,7 @@ public class IndexController extends Controller {
             response.getWriter().print ("<cell>" + tweetRef.getKey() + "</cell>");
             response.getWriter().print ("<cell>" + tweetRef.getContent() + "</cell>");
             response.getWriter().print ("<cell>" + tweetRef.getCreateDate() + "</cell>");
-            response.getWriter().print("<cell><![CDATA[<html> <body><a>Edit</a></body></html> ]]></cell>");
+            response.getWriter().print("<cell xlink:type='simple' xlink:href='#'> Edit </cell>");
            // response.getWriter().print ("<cell>" + "<button>Edit</button>" + "</cell>");
             response.getWriter().print ("</row>");
         }

@@ -30,12 +30,14 @@ $(function () {
            
         ],
         onSelectRow: function(key){
-        	
+        	//alert(key);
     		if(key && key!==lastsel2){
     			jQuery('#tweetList').jqGrid('restoreRow',lastsel2);
-    			jQuery('#tweetList').jqGrid('editRow',key,true);
+    			//jQuery('#tweetList').jqGrid('editRow',key,true);
     			lastsel2=key;
+    			$(".userId").attr("value", key);
     		}
+    		
     	}, 
     	/* gridComplete: function(){
     		var ids = jQuery("#tweetList").jqGrid('getDataIDs');
@@ -55,10 +57,18 @@ $(function () {
         viewrecords: true,
         gridview: true,
         autoencode: true,
-        editurl: "/twitter/editUser",
+        editurl: "/twitter/editUser?key="+lastsel2,
         caption: "User and Tweet list"
     }); 
 }); 
+</script>
+<script type="text/javascript">
+	function checkValid(){
+		if(document.getElementById("userId").value == ""){
+			alert("Please select row to edit or delete");
+			return false;
+		}
+	}
 </script>
 </head>
 <body>
@@ -70,6 +80,13 @@ $(function () {
 	</form>
 	<table id="tweetList"><tr><td></td></tr></table>
 	<div id="pager"></div>
-	
+	<form action="editUser" method="post">
+		<input type="hidden" value="" name="userKey" class="userId">
+		<input type="submit" id="edit" value="Edit" onclick="return checkValid();">
+	</form>
+	<form action="deleteUser" method="post">
+		<input type="hidden" value="" name="userKey" class="userId">
+		<input type="submit" id="delete" value="Delete" onclick="return checkValid();">
+	</form>
 </body>
 </html>
