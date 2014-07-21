@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" media="screen" href="../css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="../css/ui.jqgrid.css" />
+ 
+<!-- <script src="../js/jquery-1.11.0.min.js" type="text/javascript"></script> -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="../js/i18n/grid.locale-en.js" type="text/javascript"></script>
+<script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function () {
+	var lastsel2;
+	
+    $("#tweetList").jqGrid({
+        url: "/twitter/index",
+        datatype: "xml",
+        mtype: "GET",
+        colNames: ["Username", "First Name", "Last Name", "Tweet Key", "Content", "Create Date", "Edit"],
+        colModel: [
+            { name: "userName", index:'userName', width: 100, editable: true },
+            { name: "firstName", index:'firstName', width: 100 , editable: true},
+            { name: "lastName", index:'lastName', width: 100 , editable: true},
+            { name: "tweetKey", index:'tweetKey', width: 100 , editable: true},
+            { name: "content", index:'content', width: 500 , editable: true},
+            { name: "createDate", index:'createDate', width: 200 },
+            { name: "edit", index:'edit', width: 100 }
+           
+        ],
+        onSelectRow: function(key){
+        	
+    		if(key && key!==lastsel2){
+    			jQuery('#tweetList').jqGrid('restoreRow',lastsel2);
+    			jQuery('#tweetList').jqGrid('editRow',key,true);
+    			lastsel2=key;
+    		}
+    	}, 
+    	/* gridComplete: function(){
+    		var ids = jQuery("#tweetList").jqGrid('getDataIDs');
+    		for(var i=0;i < ids.length;i++){
+    			var cl = ids[i];
+    			be = "<input style='height:22px;width:20px;' type='button' value='E' onclick=\"jQuery('#tweetList').editRow('"+cl+"');\"  />"; 
+    			se = "<input style='height:22px;width:20px;' type='button' value='S' onclick=\"jQuery('#tweetList').saveRow('"+cl+"');\"  />"; 
+    			ce = "<input style='height:22px;width:20px;' type='button' value='C' onclick=\"jQuery('#tweetList').restoreRow('"+cl+"');\" />"; 
+    			jQuery("#tweetList").jqGrid('setRowData',ids[i],{act:be+se+ce});
+    		}
+    	}, */
+        pager: "#pager",
+        rowNum: 10,
+        rowList: [10, 20, 30],
+        sortname: "createDate",
+        sortorder: "desc",
+        viewrecords: true,
+        gridview: true,
+        autoencode: true,
+        editurl: "/twitter/editUser",
+        caption: "User and Tweet list"
+    }); 
+}); 
+</script>
+</head>
+<body>
+	<a href="/twitter/createUser">Create user</a>
+	<form action="tweet" method="post">
+		Content: <br/>
+		<textarea rows="" cols="" name="content"></textarea><br/>
+		<input type="submit" value="Create"/>
+	</form>
+	<table id="tweetList"><tr><td></td></tr></table>
+	<div id="pager"></div>
+	
+</body>
+</html>
